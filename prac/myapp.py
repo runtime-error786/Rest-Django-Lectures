@@ -12,7 +12,7 @@ def get_data(id=None):
         response = requests.get(url=URL)
         print(response.json())
     
-# get_data()
+get_data(10)
     
 def post_data():
     data = {
@@ -68,5 +68,5 @@ def delete_data():
     request = requests.delete(url=URL, headers=header ,data=json_data)
     print(request.json()) 
     
-delete_data()
+# delete_data()
     

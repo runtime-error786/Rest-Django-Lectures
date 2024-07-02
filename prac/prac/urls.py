@@ -19,5 +19,6 @@ from django.urls import path
 from api import views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('stu/', views.Student_View)
+    path('stu/', views.Student_View.as_view()),
+    path('stu/<int:pk>/', views.Student_View.as_view())
 ]
