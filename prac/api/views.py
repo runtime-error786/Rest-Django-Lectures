@@ -286,10 +286,66 @@ from rest_framework.views import APIView
 #     def delete(self,request,*args,**kwargs):
 #         return self.destroy(request,*args,**kwargs)
 
-from rest_framework.generics import ListAPIView,ListCreateAPIView,RetrieveAPIView,RetrieveDestroyAPIView,RetrieveUpdateAPIView,RetrieveUpdateDestroyAPIView,DestroyAPIView
-# generic is class base
-class Student_View(RetrieveDestroyAPIView):
-    queryset = Stu.objects.all()
-    serializer_class = StudentSerializer
+# from rest_framework.generics import ListAPIView,ListCreateAPIView,RetrieveAPIView,RetrieveDestroyAPIView,RetrieveUpdateAPIView,RetrieveUpdateDestroyAPIView,DestroyAPIView
+# # generic is class base
+# class Student_View(RetrieveDestroyAPIView):
+#     queryset = Stu.objects.all()
+#     serializer_class = StudentSerializer
+
+from rest_framework import viewsets
+ 
+class Student_View(viewsets.ViewSet):
+    def list(self,request):
+        db_data = Stu.objects.all()
+        serialize_data = StudentSerializer(db_data,many=True)
+        return Response(data=serialize_data.data, status=status.HTTP_404_NOT_FOUND)
+            
+    def create(self,request):
+            data = request.data 
+            print(data)
+            serialize_data = StudentSerializer(data=data)
+            print("ssssssssssss")
+            if serialize_data.is_valid():
+                print("ssssssssssssssskkkkk")
+                serialize_data.save()
+                return Response(data={'msg':'data is posted'}, status=status.HTTP_200_OK)
+            else:
+                 return Response(data={'msg':'data is not posted'}, status=status.HTTP_404_NOT_FOUND)
+             
+             
+    def update(self,request,pk=None):
+            data = request.data 
+            db_data = Stu.objects.get(id=pk) 
+            serialize_data = StudentSerializer(db_data , data=data)
+            if serialize_data.is_valid():
+                print("here is line run")
+                serialize_data.save()
+                return Response(data={'msg':'data is updated'}, status=status.HTTP_200_OK)
+            else:
+                return Response(data={'msg':'data is not  posted'}, status=status.HTTP_404_NOT_FOUND)
     
-    
+    def retrieve(self,request,pk=None):
+            id = pk
+            print("Received ID:", id)  # Debug print
+            db_data = Stu.objects.get(id=id)
+            print("Database Data:", db_data)  # Debug print
+            serialize_data = StudentSerializer(db_data)
+            return Response(data=serialize_data.data, status=status.HTTP_200_OK)
+            
+            
+    def partial_update(self,request,pk=None):
+            data = request.data 
+            db_data = Stu.objects.get(id=pk) 
+            serialize_data = StudentSerializer(db_data , data=data, partial=True)
+            if serialize_data.is_valid():
+                serialize_data.save()
+                return Response(data={'msg':'data  patch updated'}, status=status.HTTP_200_OK)
+            else:
+                return Response(data={'msg':'data  patch not updated'}, status=status.HTTP_404_NOT_FOUND)
+            
+    def destroy(self,request,pk=None):
+            data = request.data 
+            db_data = Stu.objects.get(id=pk) 
+            db_data.delete()
+            return Response(data={'msg':'data is deleted'}, status=status.HTTP_200_OK)
+            
