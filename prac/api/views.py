@@ -256,32 +256,40 @@ from rest_framework.views import APIView
 #             db_data.delete()
 #             return Response(data={'msg':'data is deleted'}, status=status.HTTP_200_OK)
             
-from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import ListModelMixin,CreateModelMixin,UpdateModelMixin,DestroyModelMixin,RetrieveModelMixin
+# from rest_framework.generics import GenericAPIView
+# from rest_framework.mixins import ListModelMixin,CreateModelMixin,UpdateModelMixin,DestroyModelMixin,RetrieveModelMixin
 
-# pk not required
-class Student_View(GenericAPIView,ListModelMixin,CreateModelMixin):
+# # pk not required
+# class Student_View(GenericAPIView,ListModelMixin,CreateModelMixin):
+#     queryset = Stu.objects.all()
+#     serializer_class = StudentSerializer
+    
+#     def get(self,request,*args,**kwargs):
+#         return self.list(request,*args,**kwargs)
+    
+#     def post(self,request,*args,**kwargs):
+#         return self.create(request,*args,**kwargs)
+    
+    
+
+# # pk required
+# class Student_View1(GenericAPIView,UpdateModelMixin,DestroyModelMixin,RetrieveModelMixin):
+#     queryset = Stu.objects.all()
+#     serializer_class = StudentSerializer
+    
+#     def put(self,request,*args,**kwargs):
+#         return self.update(request,*args,**kwargs)
+    
+#     def get(self,request,*args,**kwargs):
+#         return self.retrieve(request,*args,**kwargs)
+    
+#     def delete(self,request,*args,**kwargs):
+#         return self.destroy(request,*args,**kwargs)
+
+from rest_framework.generics import ListAPIView,ListCreateAPIView,RetrieveAPIView,RetrieveDestroyAPIView,RetrieveUpdateAPIView,RetrieveUpdateDestroyAPIView,DestroyAPIView
+# generic is class base
+class Student_View(RetrieveDestroyAPIView):
     queryset = Stu.objects.all()
     serializer_class = StudentSerializer
     
-    def get(self,request,*args,**kwargs):
-        return self.list(request,*args,**kwargs)
     
-    def post(self,request,*args,**kwargs):
-        return self.create(request,*args,**kwargs)
-    
-    
-
-# pk required
-class Student_View1(GenericAPIView,UpdateModelMixin,DestroyModelMixin,RetrieveModelMixin):
-    queryset = Stu.objects.all()
-    serializer_class = StudentSerializer
-    
-    def put(self,request,*args,**kwargs):
-        return self.update(request,*args,**kwargs)
-    
-    def get(self,request,*args,**kwargs):
-        return self.retrieve(request,*args,**kwargs)
-    
-    def delete(self,request,*args,**kwargs):
-        return self.destroy(request,*args,**kwargs)
