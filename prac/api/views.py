@@ -360,4 +360,14 @@ from rest_framework.views import APIView
 # class Student_View(viewsets.ReadOnlyModelViewSet):
 #     queryset = Stu.objects.all()
 #     serializer_class = StudentSerializer
-    
+
+
+from rest_framework import viewsets
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated,IsAdminUser,AllowAny
+
+class Student_View(viewsets.ModelViewSet):
+    queryset = Stu.objects.all()
+    serializer_class = StudentSerializer
+    authentication_classes=[BasicAuthentication]
+    permission_classes=[IsAuthenticated]
