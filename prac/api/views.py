@@ -362,13 +362,76 @@ from rest_framework.views import APIView
 #     serializer_class = StudentSerializer
 
 
-from rest_framework import viewsets
-from rest_framework.authentication import BasicAuthentication,SessionAuthentication
-from rest_framework.permissions import IsAuthenticated,IsAdminUser,AllowAny,IsAuthenticatedOrReadOnly,DjangoModelPermissions,DjangoModelPermissionsOrAnonReadOnly
-from .Custome_permission import Custome_Permission
-class Student_View(viewsets.ModelViewSet):
-    queryset = Stu.objects.all()
-    serializer_class = StudentSerializer
-    # authentication_classes=[BasicAuthentication]
-    authentication_classes = [SessionAuthentication]
-    permission_classes=[Custome_Permission]
+# from rest_framework import viewsets
+# from rest_framework.authentication import BasicAuthentication,SessionAuthentication
+# from rest_framework.permissions import IsAuthenticated,IsAdminUser,AllowAny,IsAuthenticatedOrReadOnly,DjangoModelPermissions,DjangoModelPermissionsOrAnonReadOnly
+# from .Custome_permission import Custome_Permission
+# class Student_View(viewsets.ModelViewSet):
+#     queryset = Stu.objects.all()
+#     serializer_class = StudentSerializer
+#     # authentication_classes=[BasicAuthentication]
+#     authentication_classes = [SessionAuthentication]
+#     permission_classes=[Custome_Permission]
+
+from rest_framework.decorators import permission_classes,authentication_classes
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view
+from .models import Stu
+from .serializers import StudentSerializer
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.views import APIView
+
+@api_view(["GET","POST","PUT","PATCH","DELETE"])
+@authentication_classes([BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def Student_View(req):
+    if req.method == "GET":
+            id = req.GET.get("id")
+            if id is not None:
+                print("Received ID:", id)  # Debug print
+                db_data = Stu.objects.get(id=id)
+                print("Database Data:", db_data)  # Debug print
+                serialize_data = StudentSerializer(db_data)
+                return Response(data=serialize_data.data, status=status.HTTP_200_OK)
+            else:
+                db_data = Stu.objects.all()
+                serialize_data = StudentSerializer(db_data,many=True)
+                return Response(data=serialize_data.data, status=status.HTTP_404_NOT_FOUND)
+    elif req.method=="POST":
+            data = req.data 
+            serialize_data = StudentSerializer(data=data)
+            print("ssssssssssss")
+            if serialize_data.is_valid():
+                print("ssssssssssssssskkkkk")
+                serialize_data.save()
+                return Response(data={'msg':'data is posted'}, status=status.HTTP_200_OK)
+            else:
+                 return Response(data={'msg':'data is not posted'}, status=status.HTTP_404_NOT_FOUND)
+    elif req.method=="PUT":
+            data = req.data 
+            db_data = Stu.objects.get(id=data['id']) 
+            serialize_data = StudentSerializer(db_data , data=data)
+            if serialize_data.is_valid():
+                print("here is line run")
+                serialize_data.save()
+                return Response(data={'msg':'data is updated'}, status=status.HTTP_200_OK)
+            else:
+                return Response(data={'msg':'data is not  posted'}, status=status.HTTP_404_NOT_FOUND)
+        
+    elif req.method=="PATCH":
+            data = req.data 
+            db_data = Stu.objects.get(id=data['id']) 
+            serialize_data = StudentSerializer(db_data , data=data, partial=True)
+            if serialize_data.is_valid():
+                serialize_data.save()
+                return Response(data={'msg':'data  patch updated'}, status=status.HTTP_200_OK)
+            else:
+                return Response(data={'msg':'data  patch not updated'}, status=status.HTTP_404_NOT_FOUND)
+       
+    elif req.method=="DELETE":
+            data = req.data 
+            db_data = Stu.objects.get(id=data['id']) 
+            db_data.delete()
+            return Response(data={'msg':'data is deleted'}, status=status.HTTP_200_OK)

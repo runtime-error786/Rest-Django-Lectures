@@ -29,5 +29,6 @@ urlpatterns = [
     # path('stu/', views.Student_View.as_view()),
     # path('stu/<int:pk>/', views.Student_View1.as_view())
     # path('stu/<int:pk>/', views.Student_View.as_view())
+    # path('stu/', views.Student_View),
     path('',include(router.urls))
 ]
