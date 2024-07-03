@@ -363,11 +363,12 @@ from rest_framework.views import APIView
 
 
 from rest_framework import viewsets
-from rest_framework.authentication import BasicAuthentication
-from rest_framework.permissions import IsAuthenticated,IsAdminUser,AllowAny
+from rest_framework.authentication import BasicAuthentication,SessionAuthentication
+from rest_framework.permissions import IsAuthenticated,IsAdminUser,AllowAny,IsAuthenticatedOrReadOnly,DjangoModelPermissions,DjangoModelPermissionsOrAnonReadOnly
 
 class Student_View(viewsets.ModelViewSet):
     queryset = Stu.objects.all()
     serializer_class = StudentSerializer
-    authentication_classes=[BasicAuthentication]
+    # authentication_classes=[BasicAuthentication]
+    authentication_classes = [SessionAuthentication]
     permission_classes=[IsAuthenticated]
