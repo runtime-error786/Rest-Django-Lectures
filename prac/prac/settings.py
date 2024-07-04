@@ -148,6 +148,7 @@ REST_FRAMEWORK={
     'DEFAULT_THROTTLE_RATES':{
         'anon':"2/day",
         'user':"5/hour",
-        'musu':"3/hour"
+        'musu':"3/hour",
+        'viewstu':'4/hour'
     }
 }
