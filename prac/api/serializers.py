@@ -1,5 +1,5 @@
-from rest_framework import serializers
-from .models import Stu
+# from rest_framework import serializers
+# from .models import Stu
 
 # class StudentSerializer(serializers.Serializer):
           
@@ -86,8 +86,96 @@ from .models import Stu
 #             return data
         
     
-class StudentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Stu
-        fields = "__all__"
+# class StudentSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Stu
+#         fields = "__all__"
        
+       
+       
+       # serializers.py
+# serializers.py
+
+from rest_framework import serializers
+from .models import CustomUser
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.exceptions import AuthenticationFailed
+from django.contrib.auth.hashers import make_password, check_password
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ('email', 'first_name', 'last_name', 'phone_no', 'password')
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = CustomUser.objects.create_user(
+            email=validated_data['email'],
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', ''),
+            phone_no=validated_data.get('phone_no', ''),
+            password=validated_data['password']
+        )
+        return user
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    username_field = CustomUser.USERNAME_FIELD
+
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token[cls.username_field] = getattr(user, cls.username_field)
+        token['first_name'] = user.first_name
+        token['last_name'] = user.last_name
+        token['phone_no'] = user.phone_no
+        return token
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+        password = attrs.get('password')
+
+        if email and password:
+            try:
+                user = CustomUser.objects.get(email=email)
+            except CustomUser.DoesNotExist:
+                raise AuthenticationFailed("User not found.")
+            
+            if not user.is_active:
+                raise AuthenticationFailed("User account is not active.")
+            
+            if not user.check_password(password):
+                raise AuthenticationFailed("Incorrect password.")
+
+            token = self.get_token(user)
+            return {
+                'access': str(token.access_token),
+                'refresh': str(token),
+            }
+          
+        else:
+            raise AuthenticationFailed("Must include 'email' and 'password'.")
+        
+from rest_framework import serializers
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+
+class CustomTokenRefreshSerializer(TokenRefreshSerializer):
+    def validate(self, attrs):
+        refresh = attrs.get('refresh')
+
+        if refresh:
+            try:
+                refresh_token = RefreshToken(refresh)
+                data = {'access': str(refresh_token.access_token)}
+            except TokenError:
+                raise InvalidToken('Token is invalid or expired')
+            
+            return data
+
+        raise InvalidToken('No valid token provided')

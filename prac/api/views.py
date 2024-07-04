@@ -142,12 +142,12 @@
 
 
 
-from rest_framework.decorators import api_view
-from .models import Stu
-from .serializers import StudentSerializer
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.views import APIView
+# from rest_framework.decorators import api_view
+# from .models import Stu
+# from .serializers import StudentSerializer
+# from rest_framework.response import Response
+# from rest_framework import status
+# from rest_framework.views import APIView
 
 # @api_view(["GET","POST","PUT","PATCH","DELETE"])
 # def Student_View(req):
@@ -436,3 +436,32 @@ from rest_framework.views import APIView
 #             db_data = Stu.objects.get(id=data['id']) 
 #             db_data.delete()
 #             return Response(data={'msg':'data is deleted'}, status=status.HTTP_200_OK)
+
+
+# views.py
+from rest_framework import generics
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .models import CustomUser
+from .serializers import CustomUserSerializer, CustomTokenObtainPairSerializer
+from rest_framework import viewsets
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
+
+class RegisterView(generics.CreateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+
+class CustomUserViewSet(viewsets.ModelViewSet):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[IsAuthenticated]
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    
+from rest_framework_simplejwt.views import TokenRefreshView
+from .serializers import CustomTokenRefreshSerializer
+
+class CustomTokenRefreshView(TokenRefreshView):
+    serializer_class = CustomTokenRefreshSerializer

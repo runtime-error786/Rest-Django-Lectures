@@ -1,9 +1,9 @@
-from django.contrib import admin
+# from django.contrib import admin
 
-# Register your models here.
+# # Register your models here.
 
-from .models import Stu
+# from .models import Stu
 
-@admin.register(Stu)
-class StudentAdmin(admin.ModelAdmin):
-    list_display = ['id','name','roll','city']
+# @admin.register(Stu)
+# class StudentAdmin(admin.ModelAdmin):
+#     list_display = ['id','name','roll','city']
