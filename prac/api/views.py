@@ -623,6 +623,42 @@
 # class CustomTokenRefreshView(TokenRefreshView):
 #     serializer_class = CustomTokenRefreshSerializer
 
+# from rest_framework import generics
+# from rest_framework_simplejwt.views import TokenObtainPairView
+# from .models import CustomUser
+# from .serializers import CustomUserSerializer, CustomTokenObtainPairSerializer
+# from rest_framework import viewsets
+# from rest_framework_simplejwt.authentication import JWTAuthentication
+# from rest_framework.permissions import IsAuthenticatedOrReadOnly,IsAuthenticated
+# from rest_framework.throttling import AnonRateThrottle,UserRateThrottle,ScopedRateThrottle
+# from .throttle import MustafaThrottle
+# from rest_framework.authentication import BasicAuthentication
+# from rest_framework.filters import SearchFilter
+
+# class RegisterView(generics.CreateAPIView):
+#     queryset = CustomUser.objects.all()
+#     serializer_class = CustomUserSerializer
+
+# class CustomTokenObtainPairView(TokenObtainPairView):
+#     serializer_class = CustomTokenObtainPairSerializer
+
+# class CustomUserViewSet(viewsets.ModelViewSet):
+#     queryset = CustomUser.objects.all()
+#     serializer_class = CustomUserSerializer
+#     filter_backends=[SearchFilter]
+#     search_fields = ['email',"first_name"]
+#     # search_fields = ['^email']
+#     # search_fields = ['=email']
+    
+    
+    
+# from rest_framework_simplejwt.views import TokenRefreshView
+# from .serializers import CustomTokenRefreshSerializer
+
+# class CustomTokenRefreshView(TokenRefreshView):
+#     serializer_class = CustomTokenRefreshSerializer
+
+
 from rest_framework import generics
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import CustomUser
@@ -633,7 +669,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly,IsAuthenticated
 from rest_framework.throttling import AnonRateThrottle,UserRateThrottle,ScopedRateThrottle
 from .throttle import MustafaThrottle
 from rest_framework.authentication import BasicAuthentication
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import OrderingFilter
 
 class RegisterView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
@@ -645,10 +681,8 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
-    filter_backends=[SearchFilter]
-    search_fields = ['email',"first_name"]
-    # search_fields = ['^email']
-    # search_fields = ['=email']
+    filter_backends=[OrderingFilter]
+    ordering_fields=['first_name']
     
     
     
@@ -657,3 +691,4 @@ from .serializers import CustomTokenRefreshSerializer
 
 class CustomTokenRefreshView(TokenRefreshView):
     serializer_class = CustomTokenRefreshSerializer
+
