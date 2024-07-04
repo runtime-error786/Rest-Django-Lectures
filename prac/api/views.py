@@ -496,3 +496,32 @@
 
 
 
+from rest_framework import generics
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .models import CustomUser
+from .serializers import CustomUserSerializer, CustomTokenObtainPairSerializer
+from rest_framework import viewsets
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.throttling import AnonRateThrottle,UserRateThrottle
+from .throttle import MustafaThrottle
+
+class RegisterView(generics.CreateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+
+class CustomUserViewSet(viewsets.ModelViewSet):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[IsAuthenticatedOrReadOnly]
+    throttle_classes = [AnonRateThrottle,MustafaThrottle]
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    
+from rest_framework_simplejwt.views import TokenRefreshView
+from .serializers import CustomTokenRefreshSerializer
+
+class CustomTokenRefreshView(TokenRefreshView):
+    serializer_class = CustomTokenRefreshSerializer
