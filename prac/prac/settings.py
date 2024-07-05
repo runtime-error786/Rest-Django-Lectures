@@ -143,7 +143,7 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM': 'email',  # Ensure this matches your CustomUser username field
 }
 
-AUTH_USER_MODEL = 'api.CustomUser'
+# AUTH_USER_MODEL = 'api.CustomUser'
 
 REST_FRAMEWORK={
     'DEFAULT_THROTTLE_RATES':{

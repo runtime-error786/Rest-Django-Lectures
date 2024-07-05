@@ -36,17 +36,19 @@
 
 # urls.py
 from django.urls import path, include
-from api.views import RegisterView, CustomTokenObtainPairView,CustomTokenRefreshView
+# from api.views import RegisterView, CustomTokenObtainPairView,CustomTokenRefreshView
 from rest_framework.routers import DefaultRouter
-from api.views import CustomUserViewSet
-from rest_framework_simplejwt.views import TokenRefreshView
-
+# from api.views import CustomUserViewSet
+# from rest_framework_simplejwt.views import TokenRefreshView
+from api.views import SingView,SongView
 router = DefaultRouter()
-router.register(r'users', CustomUserViewSet)
+router.register(r'sing', SingView)
+router.register(r'song', SongView)
+
 urlpatterns = [
-    path('register/', RegisterView.as_view(), name='register'),
-    path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
+    # path('register/', RegisterView.as_view(), name='register'),
+    # path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # path('token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
     path('', include(router.urls)),
 ]
 
