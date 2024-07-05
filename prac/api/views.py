@@ -693,6 +693,39 @@
 #     serializer_class = CustomTokenRefreshSerializer
 
 
+# from rest_framework import generics
+# from rest_framework_simplejwt.views import TokenObtainPairView
+# from .models import CustomUser
+# from .serializers import CustomUserSerializer, CustomTokenObtainPairSerializer
+# from rest_framework import viewsets
+# from rest_framework_simplejwt.authentication import JWTAuthentication
+# from rest_framework.permissions import IsAuthenticatedOrReadOnly,IsAuthenticated
+# from rest_framework.throttling import AnonRateThrottle,UserRateThrottle,ScopedRateThrottle
+# from .throttle import MustafaThrottle
+# from rest_framework.authentication import BasicAuthentication
+# from rest_framework.filters import OrderingFilter
+# from .page import MY_page
+# class RegisterView(generics.CreateAPIView):
+#     queryset = CustomUser.objects.all()
+#     serializer_class = CustomUserSerializer
+
+# class CustomTokenObtainPairView(TokenObtainPairView):
+#     serializer_class = CustomTokenObtainPairSerializer
+
+# class CustomUserViewSet(viewsets.ModelViewSet):
+#     queryset = CustomUser.objects.all()
+#     serializer_class = CustomUserSerializer
+#     pagination_class = MY_page
+    
+    
+    
+# from rest_framework_simplejwt.views import TokenRefreshView
+# from .serializers import CustomTokenRefreshSerializer
+
+# class CustomTokenRefreshView(TokenRefreshView):
+#     serializer_class = CustomTokenRefreshSerializer
+
+
 from rest_framework import generics
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import CustomUser
@@ -724,5 +757,3 @@ from .serializers import CustomTokenRefreshSerializer
 
 class CustomTokenRefreshView(TokenRefreshView):
     serializer_class = CustomTokenRefreshSerializer
-
-
